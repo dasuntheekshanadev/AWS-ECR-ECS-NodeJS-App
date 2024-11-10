@@ -25,7 +25,7 @@ jobs:
           aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
           aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
           aws configure set default.region $AWS_REGION
-          aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 248189902622.dkr.ecr.us-east-1.amazonaws.com
+          docker login -u AWS -p $(aws ecr get-login-password --region us-east-1) 248189902622.dkr.ecr.us-east-1.amazonaws.com
 
       - name: Build Docker Image
         run: docker build -t node-retro-app .
