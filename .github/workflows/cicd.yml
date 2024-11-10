@@ -1,0 +1,36 @@
+name: Build and Push Docker Image to ECR
+
+on:
+  push:
+    branches:
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Log in to Amazon ECR
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: us-east-1  
+        run: |
+          aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
+          aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
+          aws configure set default.region $AWS_REGION
+          $(aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 248189902622.dkr.ecr.us-east-1.amazonaws.com)
+
+      - name: Build Docker Image
+        run: |
+          docker build -t node-retro-app .
+
+      - name: Tag Docker Image
+        run: |
+          docker tag node-retro-app:latest 248189902622.dkr.ecr.us-east-1.amazonaws.com/node-retro-app:latest
+
+      - name: Push to Amazon ECR
+        run: |
+          docker push 248189902622.dkr.ecr.us-east-1.amazonaws.com/node-retro-app:latest
