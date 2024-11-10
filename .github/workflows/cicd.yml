@@ -36,7 +36,7 @@ jobs:
       - name: Push Docker Image to Amazon ECR
         run: docker push 248189902622.dkr.ecr.us-east-1.amazonaws.com/node-retro-app:latest
 
-      - name: Deploy to EC2
+      - name: Deploy Docker Container to EC2
         env:
           EC2_SSH_KEY: ${{ secrets.EC2_SSH_KEY }}
           EC2_PUBLIC_IP: ${{ secrets.EC2_PUBLIC_IP }}
