@@ -28,7 +28,7 @@ jobs:
           aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 248189902622.dkr.ecr.us-east-1.amazonaws.com
 
       - name: Build Docker Image
-        run: docker build -t my-nodejs-app .
+        run: docker build -t node-retro-app .
 
       - name: Tag Docker Image for ECR
         run: docker tag node-retro-app:latest 248189902622.dkr.ecr.us-east-1.amazonaws.com/node-retro-app:latest
@@ -47,7 +47,7 @@ jobs:
 
           # SSH into EC2 and pull the latest image, then run it
           ssh -o StrictHostKeyChecking=no -i ec2_ssh_key ec2-user@$EC2_PUBLIC_IP << 'EOF'
-            docker pull 248189902622.dkr.ecr.us-east-1.amazonaws.com/my-nodejs-app:latest
+            docker pull 248189902622.dkr.ecr.us-east-1.amazonaws.com/node-retro-app:latest
             docker stop my-nodejs-app || true
             docker rm my-nodejs-app || true
             docker run -d -p 3000:3000 --name my-nodejs-app 248189902622.dkr.ecr.us-east-1.amazonaws.com/node-retro-app:latest
