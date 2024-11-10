@@ -25,16 +25,16 @@ jobs:
           aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
           aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
           aws configure set default.region $AWS_REGION
-          aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin 248189902622.dkr.ecr.us-east-1.amazonaws.com
+          aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 248189902622.dkr.ecr.us-east-1.amazonaws.com
 
       - name: Build Docker Image
         run: docker build -t my-nodejs-app .
 
       - name: Tag Docker Image for ECR
-        run: docker tag my-nodejs-app:latest 248189902622.dkr.ecr.us-east-1.amazonaws.com/my-nodejs-app:latest
+        run: docker tag node-retro-app:latest 248189902622.dkr.ecr.us-east-1.amazonaws.com/node-retro-app:latest
 
       - name: Push Docker Image to Amazon ECR
-        run: docker push 248189902622.dkr.ecr.us-east-1.amazonaws.com/my-nodejs-app:latest
+        run: docker push 248189902622.dkr.ecr.us-east-1.amazonaws.com/node-retro-app:latest
 
       - name: Deploy to EC2
         env:
@@ -50,7 +50,7 @@ jobs:
             docker pull 248189902622.dkr.ecr.us-east-1.amazonaws.com/my-nodejs-app:latest
             docker stop my-nodejs-app || true
             docker rm my-nodejs-app || true
-            docker run -d -p 3000:3000 --name my-nodejs-app 248189902622.dkr.ecr.us-east-1.amazonaws.com/my-nodejs-app:latest
+            docker run -d -p 3000:3000 --name my-nodejs-app 248189902622.dkr.ecr.us-east-1.amazonaws.com/node-retro-app:latest
           EOF
 
       - name: Clean up
